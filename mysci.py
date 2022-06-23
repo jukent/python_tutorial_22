@@ -1,5 +1,7 @@
 #Initialize my data variable
-data = []
+data = {'date':[],
+    'time':[],
+    'tempout':[]} #list[0] vs dict['key'] --> data['tempout']
 
 # Read the data file
 filename = "data/wxobs20170821.txt"
@@ -10,4 +12,7 @@ with open(filename, 'r') as datafile:
 
     for line in datafile:
         datum = line.split()
-        data.append(datum)
+        data['date'].append(datum[0])
+        data['time'].append(datum[1])
+        data['tempout'].append(datum[2])
+
