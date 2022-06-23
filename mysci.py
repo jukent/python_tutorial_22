@@ -14,5 +14,6 @@ with open(filename, 'r') as datafile:
         datum = line.split()
         data['date'].append(datum[0])
         data['time'].append(datum[1])
-        data['tempout'].append(datum[2])
+        data['tempout'].append(float(datum[2]))
+
 
