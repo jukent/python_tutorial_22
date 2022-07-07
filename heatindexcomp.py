@@ -1,8 +1,8 @@
 #Column names and column indices
-columns = {'date': 0, 'time': 1, 'tempout': 2, 'windspeed': 7, 'windchill': 12}
+columns = {'date': 0, 'time': 1, 'tempout': 2, 'humout': 5, 'heatindex': 13}
 
 #Data types for each column (if non-string)
-types = {'tempout': float, 'windspeed':float, 'windchill':float}
+types = {'tempout': float, 'humout':float, 'heatindex':float}
 
 
 #Initialize my data variable
@@ -26,23 +26,39 @@ with open(filename, 'r') as datafile:
             data[column].append(value)
 
 
-def estimate_windchill(t, v):
-    wci = t - 0.7 * v
-    return wci
+# Compute heat index
+def compute_heatindex(t, hum):
+    a = -42.379 
+    b = 2.04901523
+    c = 10.14333127
+    d = 0.22475541
+    e = -0.00683783
+    f = -0.05481717
+    g = 0.00122874
+    h = 0.00085282
+    i = -0.00000199
+
+    rh = hum/100
+
+    hi = (a + (b * t) + (c * rh) + (d * t * rh) + \
+        (e * t**2) + (f * rh**2) + (g * t**2 * rh) + \
+        (h * t * rh**2) + (i * t**2 * rh**2))
+
+    return hi
 
 
-windchill = []
-for temp, windspeed in zip(data['tempout'], data['windspeed']):
-    windchill.append(estimate_windchill(temp, windspeed))
+heatindex = []
+for temp, hum in zip(data['tempout'], data['humout']):
+    heatindex.append(compute_heatindex(temp, hum))
 
 # Output comparison of data
 print('                      ORIGINAL    ESTIMATED')
-print('   DATE      TIME    WINDCHILL    WINDCHILL    DIFFERENCE')
+print('   DATE      TIME    HEATINDEX    HEATINDEX    DIFFERENCE')
 print('-------    ------    ---------    ---------    ----------')
 
-zip_data = zip(data['date'], data['time'], data['windchill'], windchill)
-for date, time, wc_data, wc_est in zip_data:
-    wc_diff = wc_data - wc_est
-    print(f'{date}    {time:>6}    {wc_data:9.6f}    {wc_est:9.6f}    {wc_diff:10.6f}')
+zip_data = zip(data['date'], data['time'], data['heatindex'], heatindex)
+for date, time, hi_data, hi_est in zip_data:
+    hi_diff = hi_data - hi_est
+    print(f'{date}    {time:>6}    {hi_data:9.6f}    {hi_est:9.6f}    {hi_diff:10.6f}')
 
 
