@@ -1,6 +1,6 @@
-from readdata import read_data
-from printing import print_comparison
-from computation import estimate_windchill
+from mysci.readdata import read_data
+from mysci.printing import print_comparison
+from mysci.computation import estimate_windchill
 
 #Column names and column indices
 columns = {'date': 0, 'time': 1, 'tempout': 2, 'windspeed': 7, 'windchill': 12}
